@@ -1,0 +1,81 @@
+plugins {
+    id 'java'
+    id "io.gatling.gradle" version "3.4.0"
+    id 'scala'
+    id 'org.liquibase.gradle' version '2.0.4'
+}
+
+group 'collab-load-tests'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'org.liquibase.gradle'
+apply plugin: 'java'
+apply plugin: 'scala'
+apply plugin: 'io.gatling.gradle'
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://nexus.collabdevteam.net/repository/maven-public/'
+    }
+}
+
+ext {
+    scalajVersion = '2.4.2'
+    json4sVersion = '3.7.0-M7'
+    liquibaseCoreVersion = '3.10.3'
+    liquibaseGroovyDslVersion = '2.1.2'
+    mysqlConnectorJavaVersion = '8.0.11'
+    jakartaXmlBindVersion = '3.0.0'
+}
+
+dependencies {
+    liquibaseRuntime "org.liquibase:liquibase-core:${liquibaseCoreVersion}"
+    liquibaseRuntime "org.liquibase:liquibase-groovy-dsl:${liquibaseGroovyDslVersion}"
+    liquibaseRuntime "mysql:mysql-connector-java:${mysqlConnectorJavaVersion}"
+    liquibaseRuntime group: 'jakarta.xml.bind', name: 'jakarta.xml.bind-api', version: "${jakartaXmlBindVersion}"
+
+    gatlingImplementation group: 'org.scalaj', name: 'scalaj-http_2.12', version: "${scalajVersion}"
+    gatlingImplementation group: 'org.json4s', name: 'json4s-native_2.12', version: "${json4sVersion}"
+    gatlingImplementation group: 'org.json4s', name: 'json4s-jackson_2.12', version: "${json4sVersion}"
+    gatlingImplementation group: 'io.gatling', name: 'gatling-jdbc', version: '3.4.0'
+    gatlingImplementation "mysql:mysql-connector-java:${mysqlConnectorJavaVersion}"
+
+
+}
+
+def changeLog = "$projectDir/src/gatling/db/Changelog.xml"
+
+task('prepareDB') {
+
+    println "adding new users to database..."
+    def userName = findProperty('username') ?: 'ei'
+    def pwd = findProperty('password') ?: 'password'
+    def dbUrl = findProperty('dbUrl') ?: 'collab-mysql-5-7.collabdevteam.net:3306'
+    def usersCount = findProperty('usersCount') ?: '1000'
+    def reviewCount = findProperty('reviewCount') ?: '1000'
+
+
+    println "username: $userName"
+    println "password: $pwd"
+    println "dbUrl: jdbc:mysql://$dbUrl/ccollabdb?useSSL=false"
+
+    liquibase {
+        activities {
+            main {
+                changeLogFile changeLog
+                url "jdbc:mysql://$dbUrl/ccollabdb?useSSL=false"
+                username userName
+                password pwd
+                changeLogParameters([usersCount: usersCount, reviewCount:reviewCount])
+            }
+        }
+    }
+}
+
+gatling {
+    toolVersion = '3.4.0'
+    jvmArgs = ['-server', '-Xms512M', '-Xmx512M']
+    systemProperties = ['file.encoding': 'UTF-8']
+    logHttp = 'FAILURES'
+}
