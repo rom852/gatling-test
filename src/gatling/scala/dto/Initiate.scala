@@ -21,7 +21,7 @@ object Initiate {
        |    "command": "SessionService.authenticate"
        |}, {
        |    "args": {
-       |        "licenseType": "COLLAB_FIXED",
+       |        "licenseType": "LICENSE",
        |        "licenseCodes": "${license}"
        |    },
        |    "command": "InitializationService.initProduct"

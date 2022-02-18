@@ -7,13 +7,13 @@ import io.gatling.jdbc.Predef.jdbcFeeder
 import scenarios.{ReviewFlow, UsersFlow}
 import steps.InitSteps
 
-class CollabSimulation extends Simulation {
+class Simulation extends Simulation {
 
   final val author: String = "author"
   final val reviewer: String = "reviewer"
 
-  val testServerUrl: String = if (System.getProperty("collab_url") != null) System.getProperty("collab_url") else "http://127.0.0.1:8080"
-  val dbUrl: String = if (System.getProperty("dbUrl") != null) System.getProperty("dbUrl") else "jdbc:mysql://localhost:3306/ccollabdb?useSSL=false"
+  val testServerUrl: String = if (System.getProperty("base_url") != null) System.getProperty("base_url") else "http://127.0.0.1:8080"
+  val dbUrl: String = if (System.getProperty("dbUrl") != null) System.getProperty("dbUrl") else "jdbc:mysql://localhost:3306/maindb?useSSL=false"
   val dbUser: String = if (System.getProperty("dbUser") != null) System.getProperty("dbUser") else "root"
   val dbPassword: String = if (System.getProperty("dbPassword") != null) System.getProperty("dbPassword") else "Qwerty123!"
 
