@@ -7,7 +7,7 @@ import io.gatling.jdbc.Predef.jdbcFeeder
 import scenarios.{ReviewFlow, UsersFlow}
 import steps.InitSteps
 
-class Simulation extends Simulation {
+class MainSimulation extends Simulation {
 
   final val author: String = "author"
   final val reviewer: String = "reviewer"
