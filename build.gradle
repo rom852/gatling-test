@@ -5,7 +5,7 @@ plugins {
     id 'org.liquibase.gradle' version '2.0.4'
 }
 
-group 'collab-load-tests'
+group 'gatling-load-tests'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'org.liquibase.gradle'
@@ -16,7 +16,7 @@ apply plugin: 'io.gatling.gradle'
 repositories {
     mavenCentral()
     maven {
-        url 'https://nexus.collabdevteam.net/repository/maven-public/'
+        url 'https://nexus.devteam.net/repository/maven-public/'
     }
 }
 
@@ -51,20 +51,20 @@ task('prepareDB') {
     println "adding new users to database..."
     def userName = findProperty('username') ?: 'ei'
     def pwd = findProperty('password') ?: 'password'
-    def dbUrl = findProperty('dbUrl') ?: 'collab-mysql-5-7.collabdevteam.net:3306'
+    def dbUrl = findProperty('dbUrl') ?: 'db-mysql-5-7.devteam.net:3306'
     def usersCount = findProperty('usersCount') ?: '1000'
     def reviewCount = findProperty('reviewCount') ?: '1000'
 
 
     println "username: $userName"
     println "password: $pwd"
-    println "dbUrl: jdbc:mysql://$dbUrl/ccollabdb?useSSL=false"
+    println "dbUrl: jdbc:mysql://$dbUrl/mainbdb?useSSL=false"
 
     liquibase {
         activities {
             main {
                 changeLogFile changeLog
-                url "jdbc:mysql://$dbUrl/ccollabdb?useSSL=false"
+                url "jdbc:mysql://$dbUrl/maindb?useSSL=false"
                 username userName
                 password pwd
                 changeLogParameters([usersCount: usersCount, reviewCount:reviewCount])

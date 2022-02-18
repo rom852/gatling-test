@@ -3,7 +3,7 @@ CREATE PROCEDURE generate_users(IN usersCount INTEGER(255))
 BEGIN
   DECLARE i INT DEFAULT 0;
   WHILE i < usersCount DO
-INSERT INTO `ccollabdb`.`user` (`user_password`, `user_name`, `user_email`, `user_phone`,
+INSERT INTO `mainbdb`.`user` (`user_password`, `user_name`, `user_email`, `user_phone`,
 `user_initials`, `user_guid`, `user_department`, `user_firstname`, `user_lastname`,
 `user_lastlogin`, `user_lastactivity`, `user_lastlogout`, `user_admin`, `user_tutorials`,
 `user_active`, `user_nextpagescroll`, `user_createchildgroups`, `user_edittemplates`,
